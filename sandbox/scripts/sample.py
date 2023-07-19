@@ -13,8 +13,8 @@ payload = {
       "command": [
         {
         "command_type": "character",
-        "command_code": "set_property_value",
-        "command_value": "operationStatus=OFF"
+        "command_code": "get_property_value",
+        "command_value": "targetTemperature"#"operationMode"#"operationStatus=ON"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
@@ -32,4 +32,15 @@ headers = {
 
 response = requests.request("POST", url, headers=headers, json=payload)
 
-print(response.text)
+# print(response.text)
+jsonData = response.json()
+
+jsonDict = {
+  'command_code': jsonData['results'][0]["command"][0]["command_code"],
+  'command_value': jsonData['results'][0]["command"][0]["command_value"],
+  'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
+  'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+}
+
+print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
+  jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")")
