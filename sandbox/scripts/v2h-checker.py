@@ -46,7 +46,7 @@ payload_set = {
         {
         "command_type": "character",
         "command_code": "set_property_value",
-        "command_value": "operationMode=idle"
+        "command_value": "operationMode=charge"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],

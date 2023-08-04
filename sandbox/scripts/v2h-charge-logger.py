@@ -9,6 +9,24 @@ load_dotenv()
 
 url = os.environ['TARGET_URL']
 
+payload0 = {
+  "requests": [
+    {
+      "command": [
+        {
+        "command_type": "character",
+        "command_code": "get_property_value",
+        "command_value": "operationMode"#"chargingElectricPower"#"remainingCapacity3"#"targetTemperature"#"operationMode"#"operationStatus=ON"
+        }
+      ],
+      "driver_id": os.environ['DRIVER_ID'],
+      "r_edge_id": os.environ['R_EDGE_ID'],
+      "thing_uuid": os.environ['THING_UUID']
+    }
+  ]
+}
+
+
 payload1 = {
   "requests": [
     {
@@ -71,39 +89,15 @@ def getRequests():
 
     print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y/%m/%d %H:%M:%S'))
 
+    getRequest(payload0)
+
+    time.sleep(5)
+
     getRequest(payload1)
-    # response1 = requests.request("POST", url, headers=headers, json=payload1)
-
-    # # print(response.text)
-    # jsonData = response1.json()
-
-    # jsonDict = {
-    # 'command_code': jsonData['results'][0]["command"][0]["command_code"],
-    # 'command_value': jsonData['results'][0]["command"][0]["command_value"],
-    # 'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    # 'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
-    # }
-
-    # print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
-    # jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")")
 
     time.sleep(5)
 
     getRequest(payload2)
-    # response2 = requests.request("POST", url, headers=headers, json=payload2)
-
-    # # print(response.text)
-    # jsonData2 = response2.json()
-
-    # jsonDict2 = {
-    # 'command_code': jsonData2['results'][0]["command"][0]["command_code"],
-    # 'command_value': jsonData2['results'][0]["command"][0]["command_value"],
-    # 'response_result': jsonData2['results'][0]["command"][0]["response"][0]["response_result"],
-    # 'response_value': jsonData2['results'][0]["command"][0]["response"][0]["response_value"]
-    # }
-
-    # print(jsonDict2["command_code"]  + " (" + jsonDict2["command_value"] + ") " + 
-    # jsonDict2["response_result"] + " (" + jsonDict2["response_value"] + ")")
 
 def scheduler(interval, f, wait = True):
     base_time = time.time()
