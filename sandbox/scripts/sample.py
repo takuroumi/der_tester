@@ -14,7 +14,7 @@ payload = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "targetTemperature"#"operationMode"#"operationStatus=ON"
+        "command_value": "operationMode"#"instantaneousElectricPower"#"chargingElectricPower"#"remainingCapacity3"#"targetTemperature"#"operationMode"#"operationStatus=ON"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],

@@ -29,12 +29,12 @@ payload_get = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "operationStatus"
+        "command_value": "operationMode"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -46,12 +46,12 @@ payload_set = {
         {
         "command_type": "character",
         "command_code": "set_property_value",
-        "command_value": "operationStatus=ON"
+        "command_value": "operationMode=charge"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -82,7 +82,7 @@ except TimeoutError:
     pass
 
 try:
-    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=5)
+    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=20)
     # print(response_set.text)
     jsonData = response_set.json()
 
@@ -100,7 +100,7 @@ except TimeoutError:
     print("set is timed out")
     pass
 
-time.sleep(5)
+time.sleep(20)
 
 try:
     response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=5)
