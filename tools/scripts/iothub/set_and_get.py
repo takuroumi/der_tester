@@ -1,15 +1,12 @@
-# # SETした項目の状態確認（SET＆GET）
+# 遠方操作でDER機器をSETした項目の状態確認（SET＆GET）
 # - 引数
-#   - SET内容（EPC、値）
-#   - GET間隔（秒数）
+#   - なし
 # - 動作
-#   1. 引数のSET内容の事前GETを実施
-#   2. 引数のSET内容をもとにSET信号を送信
-#   3. 引数の間隔だけWAITしたあとに、GET信号を送信
+#   1. コード文中のSET内容の事前GETを実施
+#   2. コード文中のSET内容をもとにSET信号を送信
+#   3. コード文中で設定された秒数だけWAITしたあとに、GET信号を送信
 # - 出力
-#   - SET前後のGET結果を比較した結果を表示する
-#   - 状況変化が発生していたらＯＫ，変わっていなかったらＮＧ？
-#     - 表現の仕方は考える
+#   - GET, SET の結果をそれぞれコンソールへ表示する
 
 import requests
 import json
@@ -29,12 +26,15 @@ payload_get = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "operationMode"
+        "command_value": "operationStatus"
         }
       ],
-      "driver_id": os.environ['DRIVER_ID'],
+      #######
+      # 遠方操作対象のDER機器を指定してください（DRIVER_ID, R_EDGE_ID, THINGS_UUID）
+      #######
+      "driver_id": os.environ['DRIVER_ID'], 
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID']
+      "thing_uuid": os.environ['THING_UUID_1F_S']
     }
   ]
 }
@@ -46,12 +46,18 @@ payload_set = {
         {
         "command_type": "character",
         "command_code": "set_property_value",
-        "command_value": "operationMode=charge"
+        #######
+        # SET内容を指定してください（operationStatus, operationMode, ...)
+        #######
+        "command_value": "operationStatus=ON"
         }
       ],
+      #######
+      # 遠方操作対象のDER機器を指定してください（DRIVER_ID, R_EDGE_ID, THINGS_UUID）
+      #######
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID']
+      "thing_uuid": os.environ['THING_UUID_1F_S']
     }
   ]
 }
@@ -82,7 +88,7 @@ except TimeoutError:
     pass
 
 try:
-    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=20)
+    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=5)
     # print(response_set.text)
     jsonData = response_set.json()
 
@@ -100,7 +106,7 @@ except TimeoutError:
     print("set is timed out")
     pass
 
-time.sleep(20)
+time.sleep(5)
 
 try:
     response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=5)
