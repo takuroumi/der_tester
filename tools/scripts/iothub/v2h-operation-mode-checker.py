@@ -1,15 +1,12 @@
-# # SETした項目の状態確認（SET＆GET）
-# - 引数
-#   - SET内容（EPC、値）
-#   - GET間隔（秒数）
+# V2H の運転モードの切り替えをした際の、ICT応答と機器の現在状態を確認する
+# - 実行時引数
+#   - なし
 # - 動作
-#   1. 引数のSET内容の事前GETを実施
-#   2. 引数のSET内容をもとにSET信号を送信
-#   3. 引数の間隔だけWAITしたあとに、GET信号を送信
+#   1. コード中で指定された運転モードについて、あらかじめ GET をする
+#   2. コード中で指定された運転モードへ、SET をする
+#   3. 20秒間WAITしたあとに、再度 GET をして SET 結果を確認する
 # - 出力
-#   - SET前後のGET結果を比較した結果を表示する
-#   - 状況変化が発生していたらＯＫ，変わっていなかったらＮＧ？
-#     - 表現の仕方は考える
+#   - GET, SETの状態出力
 
 import requests
 import json
@@ -29,12 +26,12 @@ payload_get = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "operationStatus"
+        "command_value": "operationMode"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -46,12 +43,12 @@ payload_set = {
         {
         "command_type": "character",
         "command_code": "set_property_value",
-        "command_value": "operationStatus=ON"
+        "command_value": "operationMode=charge" # ここを変更してください（charge, discharge, idle, standby）
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -82,7 +79,7 @@ except TimeoutError:
     pass
 
 try:
-    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=5)
+    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=20)
     # print(response_set.text)
     jsonData = response_set.json()
 
@@ -100,11 +97,10 @@ except TimeoutError:
     print("set is timed out")
     pass
 
-time.sleep(5)
+time.sleep(20)
 
 try:
     response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=5)
-    # print(response_get2.text)
     jsonData = response_get2.json()
 
     get2 = {

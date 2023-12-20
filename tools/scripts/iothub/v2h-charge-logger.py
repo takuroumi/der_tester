@@ -1,15 +1,11 @@
-# 設定温度を変更して状態確認（SET＆GETの繰り返し）
-# - 引数
-#   - SET内容（EPC、値）
-#   - GET間隔（秒数）
+# V2H の運転モード・充電電力・SOCを定期取得し、DERの操作に対する状態変化を確認する
+# - 実行時の引数
+#   - なし
 # - 動作
-#   1. 引数のSET内容の事前GETを実施
-#   2. 引数のSET内容をもとにSET信号を送信
-#   3. 引数の間隔だけWAITしたあとに、GET信号を送信
+#   1. 指定された引数（運転モード・充電電力・SOCの定期取得）のGETを順番に実施
+#   2. 1分間WAITしたあとに、手順1.を繰り返す
 # - 出力
-#   - SET前後のGET結果を比較した結果を表示する
-#   - 状況変化が発生していたらＯＫ，変わっていなかったらＮＧ？
-#     - 表現の仕方は考える
+#   - GETの状態出力
 
 import requests
 import json
@@ -21,7 +17,6 @@ import threading
 load_dotenv()
 
 url = os.environ['TARGET_URL']
-i = 0
 
 payload0 = {
   "requests": [
@@ -30,15 +25,16 @@ payload0 = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "targetTemperature"
+        "command_value": "operationMode"#"chargingElectricPower"#"remainingCapacity3"#"targetTemperature"#"operationMode"#"operationStatus=ON"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
+
 
 payload1 = {
   "requests": [
@@ -46,40 +42,34 @@ payload1 = {
       "command": [
         {
         "command_type": "character",
-        "command_code": "set_property_value",
-        "command_value": "targetTemperature=25"
+        "command_code": "get_property_value",
+        "command_value": "instantaneousElectricPower"#"chargingElectricPower"#"remainingCapacity3"#"targetTemperature"#"operationMode"#"operationStatus=ON"
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_S']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
 
-targetTemperatures = {
-    "0": 17,
-    "1": 17.5,
-    "2": 18,
-    "3": 18.5,
-    "4": 19,
-    "5": 20,
-    "6": 21,
-    "7": 22,
-    "8": 23,
-    "9": 24,
-    "10": 25,
-    "11": 26,
-    "12": 27,
-    "13": 28,
-    "14": 29,
-    "15": 30,
-    "16": 31,
-    "17": 31.5,
-    "18": 32,
-    "19": 32.5,
-    "20": 33
+payload2 = {
+  "requests": [
+    {
+      "command": [
+        {
+        "command_type": "character",
+        "command_code": "get_property_value",
+        "command_value": "remainingCapacity3"#"targetTemperature"#"operationMode"#"operationStatus=ON"
+        }
+      ],
+      "driver_id": os.environ['DRIVER_ID'],
+      "r_edge_id": os.environ['R_EDGE_ID'],
+      "thing_uuid": os.environ['THING_UUID']
+    }
+  ]
 }
+
 
 headers = {
   "Content-type": "application/json",
@@ -105,20 +95,18 @@ def getRequest(pl):
 
 
 def getRequests():
-    global i
+
     print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y/%m/%d %H:%M:%S'))
-    # global payload1
-    
-    # print(payload1['requests'][0]['command'][0]['command_value'])
-    payload1['requests'][0]['command'][0]['command_value']= "targetTemperature=" + str(targetTemperatures[str(i)])
-    print(i)
-    i+=1
 
     getRequest(payload0)
 
     time.sleep(5)
 
     getRequest(payload1)
+
+    time.sleep(5)
+
+    getRequest(payload2)
 
 def scheduler(interval, f, wait = True):
     base_time = time.time()
@@ -131,4 +119,4 @@ def scheduler(interval, f, wait = True):
         next_time = ((base_time - time.time()) % interval) or interval
         time.sleep(next_time)
 
-scheduler(10, getRequests, True)
+scheduler(60, getRequests, True) #1分ごと繰り返し
