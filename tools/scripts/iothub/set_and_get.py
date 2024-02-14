@@ -34,17 +34,19 @@ payload_get = {
       #######
       "driver_id": os.environ['DRIVER_ID'], 
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
+
+# command_valueはecnonetliteのweb APIの仕様書と対応している（はず(海原さん))
 
 payload_set = {
   "requests": [
     {
       "command": [
         {
-        "command_type": "character",
+        "command_type": "character", # IoT-EX社の定義しているものなので、自分で作れない？それかEchonetliteの定義式？
         "command_code": "set_property_value",
         #######
         # SET内容を指定してください（operationStatus, operationMode, ...)
@@ -57,7 +59,7 @@ payload_set = {
       #######
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
@@ -73,6 +75,8 @@ try:
     print(response_get1.text)
     jsonData = response_get1.json()
 
+    # ecnonetliteの応答が使用上の都合で複数あるので、それに対応するためのコード。
+    # 今回は、[0]のみを想定しているので、帰ってきたリストの先頭のものだけを取得している。
     get1 = {
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
