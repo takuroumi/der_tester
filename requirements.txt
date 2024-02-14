@@ -1,0 +1,11 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+gitdb==4.0.11
+GitPython==3.1.41
+idna==3.6
+python-dotenv==1.0.1
+requests==2.31.0
+setuptools==69.0.3
+smmap==5.0.1
+urllib3==2.2.0
+wheel==0.42.0
