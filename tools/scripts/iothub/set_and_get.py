@@ -26,7 +26,7 @@ payload_get = {
         {
         "command_type": "character",
         "command_code": "get_property_value",
-        "command_value": "operationStatus"
+        "command_value": "instantaneousChargingAndDischargingElectricPower"
         }
       ],
       #######
@@ -34,7 +34,7 @@ payload_get = {
       #######
       "driver_id": os.environ['DRIVER_ID'], 
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_D']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -51,7 +51,7 @@ payload_set = {
         #######
         # SET内容を指定してください（operationStatus, operationMode, ...)
         #######
-        "command_value": "operationStatus=ON"
+        "command_value": "instantaneousChargingAndDischargingElectricPower"
         }
       ],
       #######
@@ -59,7 +59,7 @@ payload_set = {
       #######
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_D']
+      "thing_uuid": os.environ['THING_UUID']
     }
   ]
 }
@@ -71,8 +71,8 @@ headers = {
 }
 
 try:
-    response_get1 = requests.request("POST", url, headers=headers, json=payload_get, timeout=10)
-    print(response_get1.text)
+    response_get1 = requests.request("POST", url, headers=headers, json=payload_get, timeout=20)
+    # print(response_get1.text)
     jsonData = response_get1.json()
 
     # ecnonetliteの応答が使用上の都合で複数あるので、それに対応するためのコード。
@@ -92,8 +92,8 @@ except TimeoutError:
     pass
 
 try:
-    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=5)
-    # print(response_set.text)
+    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=20)
+    print(response_set.text)
     jsonData = response_set.json()
 
     set1 = {
@@ -113,7 +113,7 @@ except TimeoutError:
 time.sleep(5)
 
 try:
-    response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=5)
+    response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=20)
     # print(response_get2.text)
     jsonData = response_get2.json()
 
