@@ -4,7 +4,7 @@ Nature Remo E API を実行し、DER動作確認を実施するツールです
 ## 事前準備
 
 1. Python 3 のインストール。ver 3.10.6 にて動作確認済みです。
-2. APIアクセスキーの取得（利用するAPIの管理者へお問い合わせください）
+2. APIアクセスキーの取得
 3. .env の設定
 4. 本ツールの実行
   - `tools/scripts` から必要なバッチファイルを実行してください 
@@ -27,6 +27,7 @@ TARGET_URL='https://api.nature.global/1/' #APIのエンドポイントURL
 APPRIANCES="appliances"
 DEVICES="devices"
 EL_APPRIANCES="echonetlite/appliances"
+SET_EPC="/refresh HTTP/1.1"
 API_KEY='' #Nature Remo Cloud API の APIキー
 ```
 
@@ -35,3 +36,9 @@ API_KEY='' #Nature Remo Cloud API の APIキー
 
 - get_a_property.py
   - 現在のDER機器の状態を取得する
+- refresh_and_get.py
+  - HEMSから現在のDER機器の最新値の状態を取得してサーバーへ送信、その最新値を取得する
+
+## Nature Remo E API について
+詳細は以下の仕様をご覧ください。
+https://developer.nature.global/docs/nature-remo-e-api-specification/
