@@ -27,6 +27,7 @@ TARGET_URL='https://api.nature.global/1/' #APIのエンドポイントURL
 APPRIANCES="appliances"
 DEVICES="devices"
 EL_APPRIANCES="echonetlite/appliances"
+SET_EPC="/refresh HTTP/1.1"
 API_KEY='' #Nature Remo Cloud API の APIキー
 ```
 
@@ -35,3 +36,9 @@ API_KEY='' #Nature Remo Cloud API の APIキー
 
 - get_a_property.py
   - 現在のDER機器の状態を取得する
+- refresh_and_get.py
+  - HEMSから現在のDER機器の最新値の状態を取得してサーバーへ送信、その最新値を取得する
+
+## Nature Remo E API について
+詳細は以下の仕様をご覧ください。
+https://developer.nature.global/docs/nature-remo-e-api-specification/
