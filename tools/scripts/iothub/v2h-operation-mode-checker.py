@@ -97,6 +97,7 @@ except TimeoutError:
     print("set is timed out")
     pass
 
+print("wait 20 seconds ...)")
 time.sleep(20)
 
 try:
@@ -115,3 +116,5 @@ try:
 except TimeoutError:
     print("get2 is timed out")
     pass
+
+print("Please check the value is set as set by set_property_value")
