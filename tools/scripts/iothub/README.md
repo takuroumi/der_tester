@@ -1,6 +1,13 @@
 # script - IoT-HUB 
 IoT-HUB API を実行し、DER動作確認を実施するツールです
 
+## IoT-HUB について
+IoT-HUBは，IoTデバイスをプロトコルフリーに相互接続する技術で，様々なデバイスやクラウドを相互に接続する際のプロトコルの整合など様々な手間を軽減します。
+DERなどIoTデバイスの通信プロトコルに適合したドライバーと呼ぶ小規模なソフトウェアを作り，それらを背中合わせにすることによって事実上のプロトコルフリー接続を実現します。
+詳細は IoT-EX社 へお問い合わせください。
+
+IoT-EX株式会社：https://www.iot-ex.co.jp/
+
 ## 事前準備
 
 1. Python 3 のインストール。ver 3.10.6 にて動作確認済みです。
@@ -13,7 +20,6 @@ IoT-HUB API を実行し、DER動作確認を実施するツールです
 
 IoT-HUB API のアクセスキーを取得し、.env に設定してください。
 
-
 ## .env の設定
 
 IoT-HUB API のアクセスキー や、IoT-HUB における DER のID情報等を指定するための .env ファイルを /tools/scripts/iothub/ 配下に作成してください。
@@ -25,8 +31,6 @@ TARGET_URL='' #APIのエンドポイントURL
 DRIVER_ID='' #IoT-HUB ドライバーのID
 R_EDGE_ID='' #IoT-HUB エッジのID
 THING_UUID='' #IoT-HUB の各DER機器のUUID
-THING_UUID_1F_T=''
-THING_UUID_2F_S=''
 API_KEY='' #IoT-HUB の APIキー
 ACCESS_TOKEN='' #IoT-HUB API実行のためのアクセストークン
 ```
