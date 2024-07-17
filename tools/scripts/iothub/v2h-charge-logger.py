@@ -120,7 +120,7 @@ def getRequests():
 
     time.sleep(5)
 
-    getRequest(payload1)
+    setRequest(payload1)
 
     time.sleep(5)
 
