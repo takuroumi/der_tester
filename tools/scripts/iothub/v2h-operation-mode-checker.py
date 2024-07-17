@@ -43,7 +43,7 @@ payload_set = {
         {
         "command_type": "character",
         "command_code": "set_property_value",
-        "command_value": "operationMode=charge" # ここを変更してください（charge, discharge, idle, standby）
+        "command_value": "operationMode=idle" # ここを変更してください（charge, discharge, idle, standby）
         }
       ],
       "driver_id": os.environ['DRIVER_ID'],
@@ -68,11 +68,12 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(get1["command_code"]  + " (" + get1["command_value"] + ") ..." + 
-    get1["response_result"] + " (" + get1["response_value"] + ")")
+    get1["response_result"] + " (" + get1["response_value"] + ")" + " ESV No. " + get1["ESV"][20:22])
 
 except TimeoutError:
     print("get1 is timed out")
@@ -87,11 +88,12 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(set1["command_code"]  + " (" + set1["command_value"] + ") ..." + 
-    set1["response_result"] + " (" + set1["response_value"] + ")")
+    set1["response_result"]  + " ESV No. " + set1["ESV"][20:22])
 
 except TimeoutError:
     print("set is timed out")
@@ -108,11 +110,12 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(get2["command_code"]  + " (" + get2["command_value"] + ") ..." + 
-    get2["response_result"] + " (" + get2["response_value"] + ")")
+    get2["response_result"] + " (" + get2["response_value"] + ")" + " ESV No. " + get2["ESV"][20:22])
 except TimeoutError:
     print("get2 is timed out")
     pass
