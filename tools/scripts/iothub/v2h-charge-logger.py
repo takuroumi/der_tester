@@ -87,11 +87,29 @@ def getRequest(pl):
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
-    jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")")
+    jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")" + " ESV No. " + jsonDict["ESV"][20:22])
+
+def setRequest(pl):
+    response = requests.request("POST", url, headers=headers, json=pl)
+
+    # print(response.text)
+    jsonData = response.json()
+
+    jsonDict = {
+    'command_code': jsonData['results'][0]["command"][0]["command_code"],
+    'command_value': jsonData['results'][0]["command"][0]["command_value"],
+    'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
+    }
+
+    print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
+    jsonDict["response_result"] + " ESV No. " + jsonDict["ESV"][20:22])
 
 
 def getRequests():
@@ -102,7 +120,7 @@ def getRequests():
 
     time.sleep(5)
 
-    getRequest(payload1)
+    setRequest(payload1)
 
     time.sleep(5)
 

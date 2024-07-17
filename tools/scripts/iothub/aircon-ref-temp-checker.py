@@ -33,7 +33,7 @@ payload0 = {
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
@@ -50,7 +50,7 @@ payload1 = {
       ],
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_2F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
@@ -95,12 +95,41 @@ def getRequest(pl):
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
-    jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")")
+    jsonDict["response_result"] + " (" + jsonDict["response_value"] + ")" + " ESV No. " + jsonDict["ESV"][20:22])
 
+def setRequest(pl):
+    response = requests.request("POST", url, headers=headers, json=pl)
+
+    # print(response.text)
+    jsonData = response.json()
+    jsonDict = {}
+    if len(jsonData['results'][0]["command"][0]["response"]) >= 2:
+      jsonDict = {
+      'command_code': jsonData['results'][0]["command"][0]["command_code"],
+      'command_value': jsonData['results'][0]["command"][0]["command_value"],
+      'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
+      'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+      'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
+      }
+
+      print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
+      jsonDict["response_result"] + " ESV No. " + jsonDict["ESV"][20:22])
+
+    else:
+      jsonDict = {
+      'command_code': jsonData['results'][0]["command"][0]["command_code"],
+      'command_value': jsonData['results'][0]["command"][0]["command_value"],
+      'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
+      'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+      }
+
+      print(jsonDict["command_code"]  + " (" + jsonDict["command_value"] + ") " + 
+      jsonDict["response_result"])
 
 def getRequests():
     global i
@@ -114,9 +143,10 @@ def getRequests():
 
     getRequest(payload0)
 
+    print("Wait 5 seconds...")
     time.sleep(5)
 
-    getRequest(payload1)
+    setRequest(payload1)
 
 def scheduler(interval, f, wait = True):
     base_time = time.time()

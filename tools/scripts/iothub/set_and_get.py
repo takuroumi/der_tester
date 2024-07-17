@@ -34,7 +34,7 @@ payload_get = {
       #######
       "driver_id": os.environ['DRIVER_ID'], 
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
@@ -57,7 +57,7 @@ payload_set = {
       #######
       "driver_id": os.environ['DRIVER_ID'],
       "r_edge_id": os.environ['R_EDGE_ID'],
-      "thing_uuid": os.environ['THING_UUID_1F_S']
+      "thing_uuid": os.environ['THING_UUID_2F_D']
     }
   ]
 }
@@ -77,18 +77,19 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(get1["command_code"]  + " (" + get1["command_value"] + ") ..." + 
-    get1["response_result"] + " (" + get1["response_value"] + ")")
+    get1["response_result"] + " (" + get1["response_value"] + ")" + " ESV No. " + get1["ESV"][20:22])
 
 except TimeoutError:
     print("get1 is timed out")
     pass
 
 try:
-    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=5)
+    response_set = requests.request("POST", url, headers=headers, json=payload_set, timeout=10)
     # print(response_set.text)
     jsonData = response_set.json()
 
@@ -96,17 +97,19 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(set1["command_code"]  + " (" + set1["command_value"] + ") ..." + 
-    set1["response_result"] + " (" + set1["response_value"] + ")")
+    set1["response_result"]  + " ESV No. " + set1["ESV"][20:22])
 
 except TimeoutError:
     print("set is timed out")
     pass
 
-time.sleep(5)
+print("Wait 10 seconds...")
+time.sleep(10)
 
 try:
     response_get2 = requests.request("POST", url, headers=headers, json=payload_get, timeout=5)
@@ -117,11 +120,12 @@ try:
     'command_code': jsonData['results'][0]["command"][0]["command_code"],
     'command_value': jsonData['results'][0]["command"][0]["command_value"],
     'response_result': jsonData['results'][0]["command"][0]["response"][0]["response_result"],
-    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"]
+    'response_value': jsonData['results'][0]["command"][0]["response"][0]["response_value"],
+    'ESV': jsonData['results'][0]["command"][0]["response"][2]["response_value"]
     }
 
     print(get2["command_code"]  + " (" + get2["command_value"] + ") ..." + 
-    get2["response_result"] + " (" + get2["response_value"] + ")")
+    get2["response_result"] + " (" + get2["response_value"] + ")" + " ESV No. " + get2["ESV"][20:22])
 except TimeoutError:
     print("get2 is timed out")
     pass
